@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -21,42 +22,49 @@ namespace FindReplaceUtility
                 settings.IgnoreUnknownArguments = false;
             }).ParseArguments<Options>(args);
             return await result.MapResult(
-                option => Excute(option, CancellationTokenSource.Token), _ => Errors(result));
+                option => Execute(option, CancellationTokenSource.Token), _ => Errors(result));
         }
-        public static Task<int> Excute(Options Options, CancellationToken Token = default)
+        const int SUCCESS_RESULT = 0;
+        const int INFORMATION_RESULT = 1;
+        const int NO_RESULT = 2;
+        const int ERROR_RESULT = 3;
+        public static Task<int> Execute(Options Options, CancellationToken Token = default)
         {
-            Console.WriteLine("Hello!");
-            var (Current, IsList, Include, Exclude, Find, Replace) = Options;
-            Console.WriteLine($"{nameof(Current)}:{Current}");
-            Console.WriteLine($"{nameof(IsList)}:{IsList}");
-            Console.WriteLine($"{nameof(Include)}:{Include}");
-            Console.WriteLine($"{nameof(Exclude)}:{Exclude}");
-            Console.WriteLine($"{nameof(Find)}:{Find}");
-            Console.WriteLine($"{nameof(Replace)}:{Replace}");
+            var (Current, Include, Exclude, Find, Replace) = Options;
+            var IsList = Options.IsList;
+            var NoResultIsSuccess = Options.NoResultIsSuccess;
             var fr = new FindReplace(Current, Include, Exclude, Find, Replace);
             return Excute();
             async Task<int> Excute()
             {
+                var Count = 0;
                 try
                 {
                     foreach (var FileInfo in fr.Files())
                         try
                         {
-                            Console.WriteLine(FileInfo);
                             var result = await fr.FindAndReplaceAsync(FileInfo.FullName, !IsList, Token);
                             if (result)
-                                Console.WriteLine("! " + FileInfo);
+                            {
+                                Count++;
+                                Console.WriteLine(FileInfo);
+                            }
                         }
                         catch (Exception e2)
                         {
-                            Console.WriteLine(e2);
+                            Console.Error.WriteLine(e2);
                         }
-                    return 0;
+                    if (IsList)
+                        return INFORMATION_RESULT;
+                    Console.WriteLine($"Result:{Count}");
+                    if (Count == 0 && !NoResultIsSuccess)
+                        return NO_RESULT;
+                    return SUCCESS_RESULT;
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    return 2;
+                    Console.Error.WriteLine(e);
+                    return ERROR_RESULT;
                 }
             }
 
@@ -65,7 +73,7 @@ namespace FindReplaceUtility
         {
             var HelpText = CommandLine.Text.HelpText.AutoBuild(Result);
             Console.WriteLine(HelpText);
-            return Task.FromResult(1);
+            return Task.FromResult(INFORMATION_RESULT);
         }
 
     }

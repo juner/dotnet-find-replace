@@ -13,31 +13,35 @@ namespace FindReplaceUtility
         readonly LazyRegex include;
         readonly LazyRegex exclude;
         readonly LazyRegex find;
-        public string Path { get; }
+        public DirectoryInfo Directory { get; }
         public Regex Include => include.Value;
         public Regex Exclude => exclude.Value;
         public Regex Find => find.Value;
         public string Replace { get; }
-        public void Deconstruct(out string Path, out Regex Include, out Regex Exclude, out Regex Find, out string Replace)
-            => (Path, Include, Exclude, Find, Replace)
-            = (this.Path, this.Include, this.Exclude, this.Find, this.Replace);
+        readonly EnumerationOptions EnumerationOptions;
+        static EnumerationOptions DefaultEnumerationOptions => new EnumerationOptions
+        {
+            AttributesToSkip = 0,
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = true,
+        };
+        public void Deconstruct(out DirectoryInfo Directory, out Regex Include, out Regex Exclude, out Regex Find, out string Replace)
+            => (Directory, Include, Exclude, Find, Replace)
+            = (this.Directory, this.Include, this.Exclude, this.Find, this.Replace);
         private LazyRegex ToLazyRegex(string Pattern) => new LazyRegex(() => new Regex(Pattern));
         private LazyRegex ToLazyRegex(Regex Regex) => new LazyRegex(Regex);
+        private DirectoryInfo ToDirectory(string Path) => new DirectoryInfo(Path);
         public FindReplace(string Path, string Include, string Exclude, string Find, string Replace)
-            => (this.Path, include, exclude, find, this.Replace)
-            = (Path, ToLazyRegex(Include), ToLazyRegex(Exclude), ToLazyRegex(Find), Replace);
+            => (Directory, include, exclude, find, this.Replace, EnumerationOptions)
+            = (ToDirectory(Path), ToLazyRegex(Include), ToLazyRegex(Exclude), ToLazyRegex(Find), Replace, DefaultEnumerationOptions);
         public FindReplace(string Path, Regex Include, Regex Exclude, Regex Find, string Replace)
-            => (this.Path, include, exclude, find, this.Replace)
-            = (Path, ToLazyRegex(Include), ToLazyRegex(Exclude), ToLazyRegex(Find), Replace);
+            => (this.Directory, include, exclude, find, this.Replace, EnumerationOptions)
+            = (ToDirectory(Path), ToLazyRegex(Include), ToLazyRegex(Exclude), ToLazyRegex(Find), Replace, DefaultEnumerationOptions);
         public IEnumerable<FileInfo> Files()
         {
-            return new DirectoryInfo(Path).EnumerateFiles(".*", new EnumerationOptions
-            {
-                AttributesToSkip = 0,
-                MatchType = MatchType.Simple,
-                IgnoreInaccessible = true,
-                RecurseSubdirectories = true,
-            }).Where(DoMatching);
+            return Directory
+                .EnumerateFiles("*", EnumerationOptions)
+                .Where(DoMatching);
         }
         public bool DoMatching(FileInfo File) => Include.IsMatch(File.FullName) && !Exclude.IsMatch(File.FullName);
         public bool DoMatching(string Path) => Include.IsMatch(Path) && !Exclude.IsMatch(Path);
