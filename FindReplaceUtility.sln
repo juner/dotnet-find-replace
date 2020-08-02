@@ -7,10 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindReplaceUtility", "FindR
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF2A3130-F781-4993-800C-FE3AD8DC09BB}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.github\workflows\build.yml = .github\workflows\build.yml
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		global.json = global.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindReplaceUtility.Tests", "FindReplaceUtility.Tests\FindReplaceUtility.Tests.csproj", "{1C86F396-7858-40E5-94FB-5879805F273C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +26,10 @@ Global
 		{EDA356F4-DB4E-45B5-A386-8BE675ED7C48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDA356F4-DB4E-45B5-A386-8BE675ED7C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDA356F4-DB4E-45B5-A386-8BE675ED7C48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C86F396-7858-40E5-94FB-5879805F273C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C86F396-7858-40E5-94FB-5879805F273C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C86F396-7858-40E5-94FB-5879805F273C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C86F396-7858-40E5-94FB-5879805F273C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

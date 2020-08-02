@@ -33,14 +33,15 @@ namespace FindReplaceUtility
             var (Current, Include, Exclude, Find, Replace) = Options;
             var IsList = Options.IsList;
             var NoResultIsSuccess = Options.NoResultIsSuccess;
-            var fr = new FindReplace(Current, Include, Exclude, Find, Replace);
+            var ff = new FileFinder(Current, Include, Exclude);
+            var fr = new FindReplace(Find, Replace);
             return Excute();
             async Task<int> Excute()
             {
                 var Count = 0;
                 try
                 {
-                    foreach (var FileInfo in fr.Files())
+                    foreach (var FileInfo in ff.Files())
                         try
                         {
                             var result = await fr.FindAndReplaceAsync(FileInfo.FullName, !IsList, Token);
