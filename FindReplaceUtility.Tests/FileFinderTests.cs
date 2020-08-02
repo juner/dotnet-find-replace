@@ -49,17 +49,18 @@ namespace FindReplaceUtility.Tests
         {
             get
             {
-                    yield return DoMatchingTestData(
-                        new FileFinder
-                        {
-                            Exclude = new Regex(".*"),
-                            Include = new Regex(".*"),
-                        }, "test.txt", false);
+                yield return DoMatchingTestData(
+                    new FileFinder
+                    {
+                        Exclude = new Regex(".*"),
+                        Include = new Regex(".*"),
+                    }, "test.txt", false);
                 static object[] DoMatchingTestData(FileFinder FileFinder, string Path, bool Expected)
                     => new object[] { FileFinder, Path, Expected };
             }
         }
         [TestMethod()]
+        [DynamicData(nameof(DoMatchingTestData))]
         public void DoMatchingTest(FileFinder FileFinder, string Path, bool Expected)
             => Assert.AreEqual(Expected, FileFinder.DoMatching(Path));
     }
