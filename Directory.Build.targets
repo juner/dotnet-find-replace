@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup>
+    <PackageReference Update="CommandLineParser" Version="2.8.0" />
+  </ItemGroup>
+</Project>
