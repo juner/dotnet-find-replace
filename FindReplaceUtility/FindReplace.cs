@@ -37,7 +37,6 @@ namespace FindReplaceUtility
                 MatchType = MatchType.Simple,
                 IgnoreInaccessible = true,
                 RecurseSubdirectories = true,
-                MatchCasing = MatchCasing.PlatformDefault,
             }).Where(DoMatching);
         }
         public bool DoMatching(FileInfo File) => Include.IsMatch(File.FullName) && !Exclude.IsMatch(File.FullName);
