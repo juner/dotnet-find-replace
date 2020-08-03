@@ -31,6 +31,7 @@ class TempDirectory : IDisposable
             disposedValue = true;
         }
     }
+    public override string ToString() => FullName;
 
     ~TempDirectory()
     {

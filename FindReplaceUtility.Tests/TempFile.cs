@@ -42,6 +42,7 @@ class TempFile : IDisposable
             disposedValue = true;
         }
     }
+    public override string ToString() => FullName;
 
     ~TempFile()
     {
