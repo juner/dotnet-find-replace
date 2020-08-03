@@ -63,6 +63,11 @@ jobs:
     needs: deployx
     runs-on: ubuntu-latest
       steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
       - name: Download Artifact
         uses: actions/download-artifact@v1
         with:
@@ -78,6 +83,11 @@ jobs:
     needs: deployx
     runs-on: ubuntu-latest
       steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
       - name: Download Artifact
         uses: actions/download-artifact@v1
         with:
