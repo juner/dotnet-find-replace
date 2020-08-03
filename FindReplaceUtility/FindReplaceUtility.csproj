@@ -18,6 +18,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/junersproject/dotnet-find-replace</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
