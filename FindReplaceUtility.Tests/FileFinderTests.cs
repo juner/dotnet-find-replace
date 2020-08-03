@@ -44,14 +44,13 @@ namespace FindReplaceUtility.Tests
         [TestMethod()]
         public void FilesTest()
         {
-            var tmp = Directory.CreateDirectory("tmp");
-            using var _tmp = Disposable.Create(() => tmp.Delete(true));
+            using var tmp = new TempDirectory();
             var FullName = Path.Combine(tmp.FullName, "text.txt");
             File.WriteAllText(FullName, "hello");
             var expected = new[] { new FileInfo(FullName) };
             var ff = new FileFinder
             {
-                Directory = tmp,
+                Directory = new DirectoryInfo(tmp.FullName),
                 Include = new Regex(".*"),
                 Exclude = new Regex("[.]git"),
             };

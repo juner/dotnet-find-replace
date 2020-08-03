@@ -31,8 +31,7 @@ namespace FindReplaceUtility.Tests
         [TestMethod()]
         public async Task FindAndReplaceAsyncTest()
         {
-            var tmp = Directory.CreateDirectory("tmp");
-            using var _tmp = Disposable.Create(() => tmp.Delete(true));
+            using var tmp = new TempDirectory();
             var FullName = Path.Combine(tmp.FullName, "text.txt");
             File.WriteAllText(FullName, "hello");
             var ExpectedResult = true;
