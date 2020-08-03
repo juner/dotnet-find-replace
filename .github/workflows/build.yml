@@ -17,6 +17,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Official NuGet Feed settings
   NUGET_KEY: ${{ secrets.NUGET_KEY }}
+  NUGET_FEED: https://api.nuget.org/v3/index.json
 
 jobs:
   
@@ -99,4 +100,4 @@ jobs:
       with:
         name: nupkg
     - name: Push to NuGet Feed
-      run: dotnet nuget push ./nupkg/**/*.nupkg --skip-duplicate --api-key $NUGET_KEY --symbol-api-key $NUGET_KEY
+      run: dotnet nuget push ./nupkg/**/*.nupkg --skip-duplicate --source $NUGET_FEED --api-key $NUGET_KEY
