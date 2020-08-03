@@ -10,10 +10,11 @@
     <RepositoryType>git</RepositoryType>
     <PackageId>dotnet-find-replace</PackageId>
     <ToolCommandName>dotnet-find-replace</ToolCommandName>
-    <Authors>juner</Authors>
+    <Authors>junersproject</Authors>
     <Company>-</Company>
     <PackageProjectUrl>https://github.com/juner/dotnet-find-replace</PackageProjectUrl>
     <GeneratePackageOnBuild Condition="'$(GeneratePackageOnBuild)' == ''">false</GeneratePackageOnBuild>
+    <InternalVisibleTo>FindReplaceUtility.Tests</InternalVisibleTo>
   </PropertyGroup>
 
   <ItemGroup>
