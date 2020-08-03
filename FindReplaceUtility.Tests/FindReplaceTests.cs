@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FindReplaceUtility;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FindReplaceUtility.Tests
@@ -9,46 +9,45 @@ namespace FindReplaceUtility.Tests
     [TestClass()]
     public class FindReplaceTests
     {
-        [TestMethod()]
-        public void DeconstructTest()
+        static IEnumerable<object[]> DeconstructTestData
         {
-            Assert.Fail();
+            get
+            {
+                var Find = new Regex("hello");
+                var Replace = "world";
+                yield return DeconstructTestData(new FindReplace(Find, Replace), Find, Replace);
+                static object[] DeconstructTestData(FindReplace FindReplace, Regex Find, string Replace)
+                    => new object[] { FindReplace, Find, Replace };
+            }
         }
-
         [TestMethod()]
-        public void FindReplaceTest()
+        [DynamicData(nameof(DeconstructTestData))]
+        public void DeconstructTest(FindReplace FindReplace, Regex ExpectFind, string ExpectReplace)
         {
-
+            var (Find, Replace) = FindReplace;
+            Assert.AreEqual(ExpectFind.ToString(), Find.ToString());
+            Assert.AreEqual(ExpectReplace, Replace);
         }
-
         [TestMethod()]
-        public void FindReplaceTest1()
+        public async Task FindAndReplaceAsyncTest()
         {
-            Assert.Fail();
-        }
+            var tmp = Directory.CreateDirectory("tmp");
+            using var _tmp = Disposable.Create(() => tmp.Delete(true));
+            var FullName = Path.Combine(tmp.FullName, "text.txt");
+            File.WriteAllText(FullName, "hello");
+            var ExpectedResult = true;
+            var ExpectedFileText = "world";
+            var expected = new[] { new FileInfo(FullName) };
+            var fr = new FindReplace
+            {
+                Find = new Regex("hello"),
+                Replace = "world",
+            };
+            var Result = await fr.FindAndReplaceAsync(FullName);
+            var FileText = File.ReadAllText(FullName);
+            Assert.AreEqual(ExpectedResult, Result);
+            Assert.AreEqual(ExpectedFileText, FileText);
 
-        [TestMethod()]
-        public void FilesTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void DoMatchingTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void DoMatchingTest1()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void FindAndReplaceAsyncTest()
-        {
-            Assert.Fail();
         }
     }
 }

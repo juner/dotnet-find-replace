@@ -53,6 +53,11 @@ namespace FindReplaceUtility
         }
         public bool DoMatching(FileInfo File) => DoMatching(File.FullName);
         public bool DoMatching(string Path) => Include.IsMatch(Path) && !Exclude.IsMatch(Path);
-
+        public override string ToString()
+            => nameof(FileFinder) + "{" + string.Join(", ", new[] {
+                $"{nameof(Directory)}:{Directory}",
+                $"{nameof(Include)}:{Include}",
+                $"{nameof(Exclude)}:{Exclude}",
+            }) + "}";
     }
 }

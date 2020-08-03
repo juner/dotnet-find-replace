@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -35,15 +36,28 @@ namespace FindReplaceUtility.Tests
         public void DeconstructTest(FileFinder FileFinder, DirectoryInfo ExpectDirectory, Regex ExpectInclude, Regex ExpectExclude)
         {
             var (Directory, Include, Exclude) = FileFinder;
-            Assert.AreEqual(ExpectDirectory, Directory);
-            Assert.AreEqual(ExpectInclude, Include);
-            Assert.AreEqual(ExpectExclude, Exclude);
+            Assert.AreEqual(ExpectDirectory.FullName, Directory.FullName);
+            Assert.AreEqual(ExpectInclude.ToString(), Include.ToString());
+            Assert.AreEqual(ExpectExclude.ToString(), Exclude.ToString());
         }
 
         [TestMethod()]
         public void FilesTest()
         {
-            Assert.Fail();
+            var tmp = Directory.CreateDirectory("tmp");
+            using var _tmp = Disposable.Create(() => tmp.Delete(true));
+            var FullName = Path.Combine(tmp.FullName, "text.txt");
+            File.WriteAllText(FullName, "hello");
+            var expected = new[] { new FileInfo(FullName) };
+            var ff = new FileFinder
+            {
+                Directory = tmp,
+                Include = new Regex(".*"),
+                Exclude = new Regex("[.]git"),
+            };
+            var files = ff.Files().ToArray();
+            CollectionAssert.AreEqual(expected.Select(v => v.FullName).ToList(), files.Select(v => v.FullName).ToList());
+
         }
         static IEnumerable<object[]> DoMatchingTestData
         {

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,14 +9,24 @@ namespace FindReplaceUtility
 {
     public class FindReplace
     {
-        readonly LazyRegex find;
-        public Regex Find => find.Value;
-        public string Replace { get; }
+        private LazyRegex? find;
+        public Regex Find
+        {
+            get => find?.Value ?? throw new InvalidOperationException(nameof(Find) + " is no set.");
+            set => find = ToLazyRegex(value);
+        }
+        private string? replace;
+        public string Replace
+        {
+            get => replace ?? throw new InvalidOperationException(nameof(Replace) + " is no set.");
+            set => replace = value;
+        }
         public void Deconstruct(out Regex Find, out string Replace)
             => (Find, Replace)
             = (this.Find, this.Replace);
         private LazyRegex ToLazyRegex(string Pattern) => new LazyRegex(() => new Regex(Pattern));
         private LazyRegex ToLazyRegex(Regex Regex) => new LazyRegex(Regex);
+        public FindReplace() { }
         public FindReplace(string Find, string Replace)
             => (find, this.Replace)
             = (ToLazyRegex(Find), Replace);
