@@ -61,7 +61,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: ./**/bin/Release/*.nupkg
+        path: ./**/bin/Release/*.{snupkg,nupkg}
 
   github:
     needs: deploy
@@ -100,4 +100,4 @@ jobs:
       with:
         name: nupkg
     - name: Push to NuGet Feed
-      run: dotnet nuget push ./nupkg/**/*.nupkg --skip-duplicate --source $NUGET_FEED --api-key $NUGET_KEY
+      run: dotnet nuget push ./nupkg/**/*.{snupkg,nupkg} --skip-duplicate --source $NUGET_FEED --api-key $NUGET_KEY
