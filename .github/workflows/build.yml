@@ -60,9 +60,9 @@ jobs:
           name: nupkg
           path: ./src/*/bin/Release/*.nupkg
   github:
-    needs: deployx
+    needs: deploy
     runs-on: ubuntu-latest
-      steps:
+    steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -80,9 +80,9 @@ jobs:
           gh-user:  $GITHUB_OWNER
           token:  ${{ secrets.GITHUB_TOKEN }}
   nuget:
-    needs: deployx
+    needs: deploy
     runs-on: ubuntu-latest
-      steps:
+    steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
