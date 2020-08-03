@@ -61,3 +61,42 @@ jobs:
       with:
         name: nupkg
         path: ./**/bin/Release/*.nupkg
+
+  github:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Download Artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: nupkg
+    - name: Push to GitHub Feed
+      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+      with:
+        nupkg-path:  './nupkg/**/*.nupkg'
+        repo-owner:  $GITHUB_OWNER
+        gh-user:  $GITHUB_OWNER
+        token:  ${{ secrets.GITHUB_TOKEN }}
+
+  nuget:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Download Artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: nupkg
+    - name: Push to NuGet Feed
+      run: dotnet nuget push ./nupkg/**/*.nupkg --skip-duplicate --api-key $NUGET_KEY --symbol-api-key $NUGET_KEY
