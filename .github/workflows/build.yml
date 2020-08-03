@@ -37,3 +37,27 @@ jobs:
       run: dotnet build -c Release --no-restore
     - name: Test
       run: dotnet test -c Release
+
+  deploy:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Create Release NuGet package
+      run: |
+        arrTag=(${GITHUB_REF//\// })
+        VERSION="${arrTag[2]}"
+        echo Version: $VERSION
+        VERSION="${VERSION//v}"
+        echo Clean Version: $VERSION
+        dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ./src/*/bin/Release/*.nupkg
