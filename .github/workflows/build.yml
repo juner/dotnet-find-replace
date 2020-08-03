@@ -46,3 +46,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Step .NET Core
+      uses: actions/step-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Create Release Nuget Packages
+      run: |
+        arrTag=(${GITHUB_REF//\// })
+        VERSION="${arrTag[2]}"
+        echo Version: $VERSION
+        VERSION="${VERSION//v}"
+        echo Clean Version: $VERSION
+        dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION
