@@ -12,15 +12,23 @@
     <ToolCommandName>dotnet-find-replace</ToolCommandName>
     <Authors>junersproject</Authors>
     <Company>-</Company>
-    <PackageProjectUrl>https://github.com/juner/dotnet-find-replace</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/junersproject/dotnet-find-replace</PackageProjectUrl>
     <GeneratePackageOnBuild Condition="'$(GeneratePackageOnBuild)' == ''">false</GeneratePackageOnBuild>
     <InternalVisibleTo>FindReplaceUtility.Tests</InternalVisibleTo>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
