@@ -6,9 +6,9 @@ namespace FindReplaceUtility
     {
         [Value(0, Default = FileFinder.DefaultPath, HelpText = "Current direcotry.", Required = false)]
         public string Current { get; set; } = string.Empty;
-        [Option('l', "list", Default = false, HelpText = "list target file. no execute.", Required = false)]
-        public bool IsList { get; set; }
-        [Option('n', "no-result-is-success", Default = false, HelpText = "no replace result is success.", Required = false)]
+        [Option("no-replace", Default = false, HelpText = "no replace file.", Required = false)]
+        public bool IsNoReplaceMode { get; set; }
+        [Option('n', "allow-replace-count-zero", Default = false, HelpText = "no replace result is success.", Required = false)]
         public bool NoResultIsSuccess { get; set; }
         [Option('i', "include", Default = FileFinder.DefaultInclude, HelpText = "A regular expression of files to include in our find and replace", Required = false)]
         public string Include { get; set; } = string.Empty;

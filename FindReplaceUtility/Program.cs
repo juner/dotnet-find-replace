@@ -31,7 +31,7 @@ namespace FindReplaceUtility
         public static Task<int> Execute(Options Options, CancellationToken Token = default)
         {
             var (Current, Include, Exclude, Find, Replace) = Options;
-            var IsList = Options.IsList;
+            var IsList = Options.IsNoReplaceMode;
             var NoResultIsSuccess = Options.NoResultIsSuccess;
             var ff = new FileFinder(Current, Include, Exclude);
             var fr = new FindReplace(Find, Replace);
