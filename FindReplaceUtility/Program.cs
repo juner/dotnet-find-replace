@@ -17,18 +17,25 @@ namespace FindReplaceUtility
                     CancellationTokenSource.Cancel();
             }
             Console.CancelKeyPress += CancelKeyPress;
+            using var d = Disposable.Create(() => Console.CancelKeyPress -= CancelKeyPress);
             var result = new Parser(settings =>
             {
                 settings.IgnoreUnknownArguments = false;
             }).ParseArguments<Options>(args);
             return await result.MapResult(
-                option => Execute(option, CancellationTokenSource.Token), _ => Errors(result));
+                option => ExecuteAsync(option, CancellationTokenSource.Token), _ => Errors(result));
         }
         const int SUCCESS_RESULT = 0;
         const int INFORMATION_RESULT = 1;
         const int NO_RESULT = 2;
         const int ERROR_RESULT = 3;
-        public static Task<int> Execute(Options Options, CancellationToken Token = default)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Options"></param>
+        /// <param name="Token"></param>
+        /// <returns></returns>
+        public static Task<int> ExecuteAsync(Options Options, CancellationToken Token = default)
         {
             var (Current, Include, Exclude, Find, Replace) = Options;
             var IsList = Options.IsNoReplaceMode;
@@ -76,6 +83,5 @@ namespace FindReplaceUtility
             Console.WriteLine(HelpText);
             return Task.FromResult(INFORMATION_RESULT);
         }
-
     }
 }
