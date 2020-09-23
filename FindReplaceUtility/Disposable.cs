@@ -2,38 +2,35 @@
 
 namespace FindReplaceUtility
 {
-    partial class Program
+    internal class Disposable : IDisposable
     {
-        internal class Disposable : IDisposable
+        readonly Action Action;
+        private Disposable(Action Action) => this.Action = Action;
+        public static IDisposable Create(Action Action) => new Disposable(Action);
+        private bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
         {
-            readonly Action Action;
-            private Disposable(Action Action) => this.Action = Action;
-            public static IDisposable Create(Action Action) => new Disposable(Action);
-            private bool disposedValue;
-
-            protected virtual void Dispose(bool disposing)
+            if (!disposedValue)
             {
-                if (!disposedValue)
+                try
                 {
-                    try
-                    {
-                        Action.Invoke();
-                    }
-                    catch { }
-                    disposedValue = true;
+                    Action.Invoke();
                 }
+                catch { }
+                disposedValue = true;
             }
-            ~Disposable()
-            {
+        }
+        ~Disposable()
+        {
 
-                Dispose(disposing: false);
-            }
+            Dispose(disposing: false);
+        }
 
-            void IDisposable.Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
+        void IDisposable.Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
