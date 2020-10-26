@@ -68,7 +68,7 @@ jobs:
   github:
     needs: deploy
     runs-on: ubuntu-latest
-    if: secrets.GITHUB_TOKEN != ''
+    if: ${{ secrets.GITHUB_TOKEN != '' }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -91,7 +91,7 @@ jobs:
   nuget:
     needs: deploy
     runs-on: ubuntu-latest
-    if: secrets.NUGET_KEY != ''
+    if: ${{ secrets.NUGET_KEY != '' }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
