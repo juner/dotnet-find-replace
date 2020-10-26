@@ -13,7 +13,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # GitHub Packages Feed settings
   GITHUB_OWNER: junersproject
-  GITHUB_FEED: https://nuget.pkg.github.com/junersproject/index.json
+  GITHUB_FEED: 'https://nuget.pkg.github.com/${{github.repository_owner}}/index.json'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Official NuGet Feed settings
   NUGET_KEY: ${{ secrets.NUGET_KEY }}
@@ -80,6 +80,7 @@ jobs:
       with:
         name: nupkg
     - name: Push to GitHub Feed
+      if: ${{ env.GITHUB_TOKEN != '' }}
       uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
       with:
         nupkg-path:  './nupkg/**/*.nupkg'
@@ -102,4 +103,5 @@ jobs:
       with:
         name: nupkg
     - name: Push to NuGet Feed
+      if: ${{ env.NUGET_KEY != '' }}
       run: dotnet nuget push ./nupkg/**/*.* --skip-duplicate --source $NUGET_FEED --api-key $NUGET_KEY
