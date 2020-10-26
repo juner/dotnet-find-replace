@@ -80,7 +80,7 @@ jobs:
       with:
         name: nupkg
     - name: Push to GitHub Feed
-      if: ${{ secrets.GITHUB_TOKEN != '' }}
+      if: ${{ env.GITHUB_TOKEN != '' }}
       uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
       with:
         nupkg-path:  './nupkg/**/*.nupkg'
@@ -103,5 +103,5 @@ jobs:
       with:
         name: nupkg
     - name: Push to NuGet Feed
-      if: ${{ secrets.NUGET_KEY != '' }}
+      if: ${{ env.NUGET_KEY != '' }}
       run: dotnet nuget push ./nupkg/**/*.* --skip-duplicate --source $NUGET_FEED --api-key $NUGET_KEY
