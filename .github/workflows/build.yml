@@ -13,7 +13,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # GitHub Packages Feed settings
   GITHUB_OWNER: junersproject
-  GITHUB_FEED: https://nuget.pkg.github.com/junersproject/index.json
+  GITHUB_FEED: 'https://nuget.pkg.github.com/${{github.repository_owner}}/index.json'
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Official NuGet Feed settings
   NUGET_KEY: ${{ secrets.NUGET_KEY }}
@@ -68,6 +68,7 @@ jobs:
   github:
     needs: deploy
     runs-on: ubuntu-latest
+    if: secrets.GITHUB_TOKEN != ''
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -90,6 +91,7 @@ jobs:
   nuget:
     needs: deploy
     runs-on: ubuntu-latest
+    if: secrets.NUGET_KEY != ''
     steps:
     - name: Checkout
       uses: actions/checkout@v2
