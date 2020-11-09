@@ -9,7 +9,7 @@
     <PackageType>DotnetTool</PackageType>
     <RepositoryType>git</RepositoryType>
     <PackageId>dotnet-find-replace</PackageId>
-    <ToolCommandName>dotnet-find-replace</ToolCommandName>
+    <ToolCommandName>find-replace</ToolCommandName>
     <Authors>junersproject</Authors>
     <Company>-</Company>
     <PackageProjectUrl>https://github.com/junersproject/dotnet-find-replace</PackageProjectUrl>

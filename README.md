@@ -11,13 +11,13 @@ This tool will find and replace strings in your project files.
 in local
 
 ```command
-dotnet tool dotnet-find-replace
+dotnet tool install dotnet-find-replace
 ```
 
 in global
 
 ```command
-dotnet tool --global dotnet-find-replace
+dotnet tool install --global dotnet-find-replace
 ```
 
 ### Example command
@@ -28,13 +28,13 @@ This example replaces
 in local 
 
 ```command
-dotnet tool run dotnet-find-replace -- --find "hello" --replace "world"
+dotnet tool run find-replace -- --find "hello" --replace "world"
 ```
 
 in global
 
 ```command
-dotnet-find-replace --find "hello" --replace "world"
+find-replace --find "hello" --replace "world"
 ```
 
 ## Inputs
