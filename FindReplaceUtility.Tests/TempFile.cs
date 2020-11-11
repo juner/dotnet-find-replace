@@ -5,29 +5,35 @@ class TempFile : IDisposable
 {
     private bool disposedValue;
 
-    public string FullName { get; protected set; }
+    public string Path { get; protected set; }
     public string Extension
     {
-        get => Path.GetExtension(FullName);
-        set => FullName = ChangeExtension(value);
+        get => System.IO.Path.GetExtension(Path);
+        set => Path = ChangeExtension(value);
     }
+    public string DirectoryName => System.IO.Path.GetDirectoryName(Path)!;
+    public string FileNameWithoutExtension => System.IO.Path.GetFileNameWithoutExtension(Path);
     private string ChangeExtension(string NewExtension)
     {
         var Extension = this.Extension;
         if (!NewExtension.StartsWith("."))
             NewExtension = string.Empty;
-        return FullName.Substring(0, FullName.Length - Extension.Length) + NewExtension;
+        if (NewExtension == Extension)
+            return this.Path;
+        var FullName = this.Path.AsSpan();
+        var Separator = System.IO.Path.DirectorySeparatorChar.ToString().AsSpan();
+        return string.Concat(System.IO.Path.GetDirectoryName(FullName), Separator, System.IO.Path.GetFileNameWithoutExtension(FullName)) + NewExtension;
     }
     public TempFile(string Extension)
     {
-        FullName = Path.GetTempFileName();
+        Path = System.IO.Path.GetTempFileName();
         this.Extension = Extension;
     }
-    public bool Exists() => File.Exists(FullName);
+    public bool Exists() => File.Exists(Path);
     public void Delete()
     {
         if (Exists())
-            File.Delete(FullName);
+            File.Delete(Path);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -42,7 +48,7 @@ class TempFile : IDisposable
             disposedValue = true;
         }
     }
-    public override string ToString() => FullName;
+    public override string ToString() => Path;
 
     ~TempFile()
     {

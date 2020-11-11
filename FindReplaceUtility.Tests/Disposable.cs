@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 sealed class Disposable : IDisposable
 {
-    private Action Action;
-    private bool disposedValue;
-    private Disposable(Action Action)
+    readonly Action Action;
+    bool disposedValue;
+    Disposable(Action Action)
         => this.Action = Action;
     public static IDisposable Create(Action Action) => new Disposable(Action);
 

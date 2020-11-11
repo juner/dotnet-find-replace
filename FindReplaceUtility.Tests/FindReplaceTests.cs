@@ -28,14 +28,32 @@ namespace FindReplaceUtility.Tests
             Assert.AreEqual(ExpectFind.ToString(), Find.ToString());
             Assert.AreEqual(ExpectReplace, Replace);
         }
-        [TestMethod()]
-        public async Task FindAndReplaceAsyncTest()
+        static IEnumerable<object?[]> FindAndReplaceAsyncTestData
+        {
+            get
+            {
+                yield return FindAndReplaceAsyncTest(
+                    "hello", new Regex("hello"), "world",
+                    true, "world"
+                );
+                yield return FindAndReplaceAsyncTest(
+                    "hello \r\n hello \r\n world!", new Regex("hello"), "super",
+                    true, "super \r\n super \r\n world!"
+                );
+                yield return FindAndReplaceAsyncTest(
+                    "no maches test \r\n ?", new Regex("test"), "mache?",
+                    false, null
+                );
+                static object?[] FindAndReplaceAsyncTest(string FileText, Regex Find, string Replace, bool ExpectedResult, string? ExpectedFileText)
+                    => new object?[] { FileText, Find, Replace, ExpectedResult, ExpectedFileText };
+            }
+        }
+        [TestMethod, DynamicData(nameof(FindAndReplaceAsyncTestData))]
+        public async Task FindAndReplaceAsyncTest(string FileText, Regex Find, string Replace, bool ExpectedResult, string? ExpectedFileText)
         {
             using var tmp = new TempDirectory();
             var FullName = Path.Combine(tmp.FullName, "text.txt");
             File.WriteAllText(FullName, "hello");
-            var ExpectedResult = true;
-            var ExpectedFileText = "world";
             var expected = new[] { new FileInfo(FullName) };
             var fr = new FindReplace
             {
@@ -43,10 +61,9 @@ namespace FindReplaceUtility.Tests
                 Replace = "world",
             };
             var Result = await fr.FindAndReplaceAsync(FullName);
-            var FileText = File.ReadAllText(FullName);
             Assert.AreEqual(ExpectedResult, Result);
-            Assert.AreEqual(ExpectedFileText, FileText);
-
+            if (Result)
+                Assert.AreEqual(ExpectedFileText, await File.ReadAllTextAsync(FullName));
         }
     }
 }
